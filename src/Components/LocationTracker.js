@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ReactDOMServer from "react-dom/server";
 
 const LocationTracker = () => {
   const [locations, setLocations] = useState([]);
   const [path, setPath] = useState(null);
   const [userInput, setUserInput] = useState([
-    { name: "Home", latitude: "9.471030", longitude: "77.811410" },
+    { name: "Home", latitude: "9.4536911", longitude: "77.8090363" },
     { name: "Bus Stop", latitude: "9.45511705", longitude: "77.8015092" },
     { name: "Church", latitude: "9.4503574", longitude: "77.7990665" },
     { name: "School", latitude: "9.4492444", longitude: "77.7882269" },
@@ -65,11 +66,14 @@ const LocationTracker = () => {
 
       // Add markers for the locations with custom location icon
       locations.forEach((loc, index) => {
+        const iconHtml = ReactDOMServer.renderToString(
+          <LocationOnIcon style={{ color: "blue" }} />
+        );
         L.marker([loc.latitude, loc.longitude], {
           icon: L.divIcon({
             className: "custom-marker",
-            iconSize: [20, 20],
-            html: `<div style="background-color: blue; border-radius: 50%; width: 10px; height: 10px; display: flex; align-items: center; justify-content: center"></div>`,
+            iconSize: [25, 25],
+            html: `<div style="color: blue">${iconHtml}</div>`,
           }),
         })
           .addTo(map)
@@ -122,7 +126,7 @@ const LocationTracker = () => {
         </div>
       </form>
       <div>
-        {locations.length > 0 ? (
+        {/* {locations.length > 0 ? (
           <div>
             {locations.map((loc, index) => (
               <div key={index}>
@@ -132,13 +136,13 @@ const LocationTracker = () => {
                 </p>
               </div>
             ))}
-            <div id="map" style={{ height: "400px", width: "500px" }}></div>
           </div>
         ) : (
           <p>
             Enter latitude and longitude for two locations to show on the map.
           </p>
-        )}
+        )} */}
+        <div id="map" style={{ height: "400px", width: "500px" }}></div>
       </div>
     </div>
   );
