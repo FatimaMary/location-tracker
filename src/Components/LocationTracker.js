@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const LocationTracker = () => {
   const [locations, setLocations] = useState([]);
   const [path, setPath] = useState(null);
   const [userInput, setUserInput] = useState([
-    { latitude: "", longitude: "" },
-    { latitude: "", longitude: "" },
+    { name: "Home", latitude: "9.471030", longitude: "77.811410" },
+    { name: "Bus Stop", latitude: "9.45511705", longitude: "77.8015092" },
+    { name: "Church", latitude: "9.4503574", longitude: "77.7990665" },
+    { name: "School", latitude: "9.4492444", longitude: "77.7882269" },
   ]);
 
   const handleInputChange = (index, e) => {
@@ -21,7 +24,8 @@ const LocationTracker = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const newLocations = userInput.map(({ latitude, longitude }) => ({
+    const newLocations = userInput.map(({ name, latitude, longitude }) => ({
+      name,
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
     }));
@@ -41,18 +45,37 @@ const LocationTracker = () => {
         attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
 
-      // Add markers for the locations
+      // Create a Polyline to connect the locations 1 and 2 (Red)
+      const pathCoords1 = locations
+        .slice(0, 2)
+        .map((loc) => [loc.latitude, loc.longitude]);
+      const polyline1 = L.polyline(pathCoords1, { color: "red" }).addTo(map);
+
+      // Create a Polyline to connect the locations 2 and 3 (Blue)
+      const pathCoords2 = locations
+        .slice(1, 3)
+        .map((loc) => [loc.latitude, loc.longitude]);
+      const polyline2 = L.polyline(pathCoords2, { color: "blue" }).addTo(map);
+
+      // Create a Polyline to connect the locations 3 and 4 (Green)
+      const pathCoords3 = locations
+        .slice(2)
+        .map((loc) => [loc.latitude, loc.longitude]);
+      const polyline3 = L.polyline(pathCoords3, { color: "green" }).addTo(map);
+
+      // Add markers for the locations with custom location icon
       locations.forEach((loc, index) => {
-        L.marker([loc.latitude, loc.longitude])
+        L.marker([loc.latitude, loc.longitude], {
+          icon: L.divIcon({
+            className: "custom-marker",
+            iconSize: [20, 20],
+            html: `<div style="background-color: blue; border-radius: 50%; width: 10px; height: 10px; display: flex; align-items: center; justify-content: center"></div>`,
+          }),
+        })
           .addTo(map)
-          .bindPopup(`Location ${index + 1}`)
+          .bindPopup(` ${loc.name}`)
           .openPopup();
       });
-
-      // Create a Polyline to connect the locations
-      const pathCoords = locations.map((loc) => [loc.latitude, loc.longitude]);
-      const polyline = L.polyline(pathCoords, { color: "blue" }).addTo(map);
-      setPath(polyline);
     }
   }, [locations]);
 
@@ -62,7 +85,7 @@ const LocationTracker = () => {
         {userInput.map((input, index) => (
           <div
             key={index}
-            style={{ display: "flex", gap: "20px", padding: "10px" }}
+            style={{ display: "flex", gap: "10px", padding: "10px" }}
           >
             <label>
               Latitude {index + 1}:
@@ -104,8 +127,8 @@ const LocationTracker = () => {
             {locations.map((loc, index) => (
               <div key={index}>
                 <p>
-                  Location {index + 1}: Latitude: {loc.latitude}, Longitude:{" "}
-                  {loc.longitude}
+                  Location {index + 1} ({loc.name}): Latitude: {loc.latitude},
+                  Longitude: {loc.longitude}
                 </p>
               </div>
             ))}
