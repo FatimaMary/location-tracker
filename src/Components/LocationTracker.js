@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ReactDOMServer from "react-dom/server";
+import "../App.css";
 
 const LocationTracker = () => {
   const [locations, setLocations] = useState([]);
@@ -66,14 +67,12 @@ const LocationTracker = () => {
 
       // Add markers for the locations with custom location icon
       locations.forEach((loc, index) => {
-        const iconHtml = ReactDOMServer.renderToString(
-          <LocationOnIcon style={{ color: "blue" }} />
-        );
+        const iconHtml = ReactDOMServer.renderToString(<LocationOnIcon />);
         L.marker([loc.latitude, loc.longitude], {
           icon: L.divIcon({
             className: "custom-marker",
-            iconSize: [25, 25],
-            html: `<div style="color: blue">${iconHtml}</div>`,
+            iconSize: [30, 30],
+            html: `<div>${iconHtml}</div>`,
           }),
         })
           .addTo(map)
