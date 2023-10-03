@@ -141,7 +141,7 @@ const LocationTracker = () => {
             Enter latitude and longitude for two locations to show on the map.
           </p>
         )} */}
-        <div id="map" style={{ height: "400px", width: "500px" }}></div>
+        <div id="map" style={{ height: "500px", width: "500px" }}></div>
       </div>
     </div>
   );
