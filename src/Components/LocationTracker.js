@@ -67,12 +67,23 @@ const LocationTracker = () => {
 
       // Add markers for the locations with custom location icon
       locations.forEach((loc, index) => {
-        const iconHtml = ReactDOMServer.renderToString(<LocationOnIcon />);
+        const iconHtml = ReactDOMServer.renderToString(
+          // <LocationOnIcon />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="blue"
+          >
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
+        );
         L.marker([loc.latitude, loc.longitude], {
           icon: L.divIcon({
             className: "custom-marker",
-            iconSize: [30, 30],
-            html: `<div>${iconHtml}</div>`,
+            iconSize: [40, 40],
+            iconAnchor: [18, 36],
+            iconColor: ["blue"],
+            html: `<div >${iconHtml}</div>`,
           }),
         })
           .addTo(map)
